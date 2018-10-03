@@ -63,11 +63,11 @@ class Utils {
     return `0x${value}`;
   }
 
-  /**
-   * Removes the '0x' hex prefix if necessary.
-   * @param str The string to remove the prefix from.
-   * @return The str without the hex prefix.
-   */
+  /*
+  * Removes the '0x' hex prefix if necessary.
+  * @param str The string to remove the prefix from.
+  * @return The str without the hex prefix.
+  */
   static trimHexPrefix(str) {
     if (str && str.indexOf('0x') === 0) {
       return str.slice(2);
@@ -75,7 +75,7 @@ class Utils {
     return str;
   }
 
-  /**
+  /*
    * Breaks down a string by {length} and returns an array of string
    * @param {string} Input string
    * @param {number} Length of each chunk.
@@ -93,13 +93,14 @@ class Utils {
    * @returns {String} ascii string representation of hex value
    */
   static toUtf8(hex) {
-    let i = 0;
+    // Find termination
+    let str = '';
+    let i = 0,
+      l = hex.length;
     if (hex.substring(0, 2) === '0x') {
       i = 2;
     }
-
-    let str = '';
-    for (; i < hex.length; i += 2) {
+    for (; i < l; i += 2) {
       const code = parseInt(hex.substr(i, 2), 16);
       if (code === 0) { break; }
       str += String.fromCharCode(code);
@@ -110,20 +111,18 @@ class Utils {
 
   /**
    * Should be called to get hex representation (prefixed by 0x) of utf8 string
+   *
    * @method fromUtf8
    * @param {String} string
    * @param {Number} optional padding
    * @returns {String} hex representation of input string
    */
   static fromUtf8(str) {
-    const string = utf8.encode(str);
+    str = utf8.encode(str);
     let hex = '';
-    for (let i = 0; i < string.length; i++) {
-      const code = string.charCodeAt(i);
-      if (code === 0) {
-        break;
-      }
-
+    for (let i = 0; i < str.length; i++) {
+      const code = str.charCodeAt(i);
+      if (code === 0) { break; }
       const n = code.toString(16);
       hex += n.length < 2 ? `0${n}` : n;
     }
@@ -133,6 +132,7 @@ class Utils {
 
   /**
    * Returns true if given string is valid json object
+   *
    * @method isJson
    * @param {String}
    * @return {Boolean}
@@ -146,12 +146,13 @@ class Utils {
   }
 
   /**
-   * Returns true if given string is valid qtum address
-   * @method isQtumAddress
+   * Returns true if given string is valid runebase address
+   *
+   * @method isRunebaseAddress
    * @param {String}
    * @return {Boolean}
    */
-  static isQtumAddress(address) {
+  static isRunebaseAddress(address) {
     if (_.isUndefined(address)) {
       return false;
     }
@@ -160,7 +161,7 @@ class Utils {
       return false;
     }
 
-    if (!address.startsWith('q') && !address.startsWith('Q')) {
+    if (!address.startsWith('5') && !address.startsWith('R')) {
       return false;
     }
 
