@@ -12,9 +12,9 @@ Run the following in your project folder:
 ## Running Tests
 You need to create a `.env` file in the root folder with the following variables in the following formats. Change it to how your environment is setup.
 ```
-RUNEBASE_RPC_ADDRESS='http://test:test@localhost:19432'
-SENDER_ADDRESS='5oMBhQ74nrad3M3VkDpV6CHV41v3z8oCrH'
-WALLET_PASSPHRASE='test'
+RUNEBASE_RPC_ADDRESS='http://bodhi:bodhi@localhost:13889'
+SENDER_ADDRESS='qMZK8FNPRm54jvTLAGEs1biTCgyCkcsmna'
+WALLET_PASSPHRASE='bodhi'
 ``` 
 
 ## Rweb3.js
@@ -23,12 +23,12 @@ Instantiate a new instance of `Rweb3`:
 const { Rweb3 } = require('rweb3');
 
 // Pass in the path of your local Runebase node rpc port with username/password
-// In our case, username=test, password=test, port=19432
-const qClient = new Rweb3('http://test:test@localhost:19432');
+// In our case, username=bodhi, password=bodhi, port=13889
+const qClient = new Rweb3('http://bodhi:bodhi@localhost:13889');
 
 // Default Runebase RPC ports:
-// testnet=19432
-// mainnet=9432
+// testnet=13889
+// mainnet=3889
 ```
 
 ### isConnected()
@@ -43,7 +43,7 @@ async function isConnected() {
 Converts a Runebase address to hex format.
 ```
 async function getHexAddress() {
-  return await qClient.getHexAddress('5oMBhQ74nrad3M3VkDpV6CHV41v3z8oCrH');
+  return await qClient.getHexAddress('qKjn4fStBaAtwGiwueJf9qFxgpbAvf1xAy');
 }
 ```
 

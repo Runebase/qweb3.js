@@ -1,5 +1,6 @@
 const Rweb3 = require('./rweb3');
 const Contract = require('./contract');
+const Encoder = require('./encoder');
 const Decoder = require('./decoder');
 const Utils = require('./utils');
 
@@ -11,6 +12,7 @@ if (typeof window !== 'undefined' && typeof window.Rweb3 === 'undefined') {
 module.exports = {
   Rweb3,
   Contract,
+  Encoder,
   Decoder,
   Utils,
 };

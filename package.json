@@ -1,12 +1,12 @@
 {
   "name": "rweb3",
-  "namespace": "runebase",
-  "version": "0.8.0",
+  "namespace": "bodhi",
+  "version": "0.8.2",
   "description": "Runebase JavaScript API comunicating to runebase node over RPC",
   "main": "./src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/runebase/rweb3.js.git"
+    "url": "https://github.com/bodhiproject/rweb3.js.git"
   },
   "license": "LGPL-3.0",
   "directories": {
@@ -40,13 +40,13 @@
     "test": "mocha ./test/",
     "test:cleanenv": "mocha ./test --cleanenv"
   },
-  "homepage": "http://www.runebase.io/",
+  "homepage": "http://www.bodhi.network/",
   "bugs": {
-    "url": "https://github.com/runebase/rweb3.js/issues"
+    "url": "https://github.com/bodhiproject/rweb3.js/issues"
   },
   "keywords": [
     "runebase",
-    "prediction",
+    "bodhi",
     "javascript",
     "jsonrpc"
   ],

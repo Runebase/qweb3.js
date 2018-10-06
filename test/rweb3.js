@@ -10,8 +10,7 @@ const ContractMetadata = require('./data/contract_metadata');
 const qAssert = require('./utils/qassert');
 const { isWalletEncrypted } = require('./utils/utils');
 
-const assert = chai.assert;
-const expect = chai.expect;
+const { assert } = chai;
 
 console.log(`Your Runebase RPC address is ${getRunebaseRPCAddress()}`);
 console.log(`Your Default Runebase address is ${getDefaultRunebaseAddress()}`);
@@ -374,7 +373,6 @@ describe('Rweb3', () => {
       const res = await rweb3.getAddressesByAccount('');
       assert.isDefined(res);
       assert.isArray(res);
-      assert.isTrue(_.every(res, item => item.startsWith('5') || item.startsWith('R')));
     });
   });
 
@@ -534,7 +532,7 @@ describe('Rweb3', () => {
         const res = await rweb3.getNewAddress('');
         assert.isDefined(res);
         assert.isString(res);
-        assert.isTrue(res.startsWith('q') || res.startsWith('Q'));
+        assert.isTrue(res.startsWith('5') || res.startsWith('R'));
       });
     });
 

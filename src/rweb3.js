@@ -17,7 +17,7 @@ class Rweb3 {
    */
   isConnected() {
     return this.provider.request({
-      method: 'getblockchaininfo',
+      method: 'getinfo',
     }).then(res => Promise.resolve(!!res), err => Promise.resolve(false));
   }
 
