@@ -1,41 +1,11 @@
-const { isString, isArray, isFinite } = require('lodash');
+const _ = require('lodash');
 
-const { initProvider } = require('./providers');
-const Contract = require('./contract');
-const HttpProvider = require('./providers/http-provider');
-const Encoder = require('./formatters/encoder');
-const Decoder = require('./formatters/decoder');
-const Utils = require('./utils');
+const HttpProvider = require('./httpprovider');
+const Formatter = require('./formatter');
 
-class Qweb3 {
-  /**
-   * Qweb3 constructor.
-   * @param {string|Qweb3Provider} provider Either URL string to create HttpProvider or a Qweb3 compatible provider.
-   */
-  constructor(provider) {
-    this.provider = initProvider(provider);
-    this.encoder = Encoder;
-    this.decoder = Decoder;
-    this.utils = Utils;
-  }
-
-  /**
-   * Constructs a new Contract instance.
-   * @param {string} address Address of the contract.
-   * @param {array} abi ABI of the contract.
-   * @return {Contract} Contract instance.
-   */
-  Contract(address, abi) {
-    return new Contract(this.provider, address, abi);
-  }
-
-  /**
-   * Constructs a new HttpProvider instance.
-   * @param {string} urlString URL of the blockchain API. eg. http://bodhi:bodhi@127.0.0.1:13889
-   * @return {HttpProvider} HttpProvider instance.
-   */
-  HttpProvider(urlString) {
-    return new HttpProvider(urlString);
+class Rweb3 {
+  constructor(url) {
+    this.provider = new HttpProvider(url);
   }
 
   /** ******** MISC ********* */
@@ -118,66 +88,42 @@ class Qweb3 {
    * @return {Promise} Promise containing returned logs or Error
    */
   searchLogs(fromBlock, toBlock, addresses, topics, contractMetadata, removeHexPrefix) {
-    if (!isFinite(fromBlock)) {
-      throw Error('fromBlock must be a number');
+    if (!_.isNumber(fromBlock)) {
+      throw new Error(`fromBlock expects a number. Got ${fromBlock} instead.`);
     }
-    if (!isFinite(toBlock)) {
-      throw Error('toBlock must be a number.');
+    if (!_.isNumber(toBlock)) {
+      throw new Error(`toBlock expects a number. Got ${toBlock} instead.`);
     }
 
     const addrObj = { addresses: undefined };
-    if (isString(addresses)) {
+    if (_.isString(addresses)) {
       addrObj.addresses = [addresses];
-    } else if (isArray(addresses)) {
+    } else if (_.isArray(addresses)) {
       addrObj.addresses = addresses;
     } else {
-      throw Error('addresses must be a string or an array.');
+      throw new Error('addresses expects a string or an array.');
     }
 
     const topicsObj = { topics: undefined };
-    if (isString(topics)) {
+    if (_.isString(topics)) {
       topicsObj.topics = [topics];
-    } else if (isArray(topics)) {
+    } else if (_.isArray(topics)) {
       topicsObj.topics = topics;
     } else {
-      throw Error('topics must be a string or an array.');
+      throw new Error('topics expects a string or an array.');
     }
 
     return this.provider.rawCall('searchlogs', [fromBlock, toBlock, addrObj, topicsObj])
-      .then(results => Decoder.decodeSearchLog(results, contractMetadata, removeHexPrefix));
+      .then(results => Formatter.searchLogOutput(results, contractMetadata, removeHexPrefix));
   }
 
-  /** ******** GENERATING ********* */
+  /** ******** CONTROL ********* */
   /**
-   * Mine up to n blocks immediately (before the RPC call returns) to an address in the wallet.
-   * @param {number} blocks How many blocks are generated immediately.
-   * @param {number} maxTries How many iterations to try (default = 1000000).
-   * @return {array} Hashes of blocks generated.
+   * Get the blockchain info.
+   * @return {Promise} Blockchain info object or Error
    */
-  generate(blocks, maxTries = 1000000) {
-    if (!isFinite(blocks)) {
-      throw Error('blocks must be a number.');
-    }
-
-    return this.provider.rawCall('generate', [blocks, maxTries]);
-  }
-
-  /**
-   * Mine blocks immediately to a specified address (before the RPC call returns).
-   * @param {number} blocks How many blocks are generated immediately.
-   * @param {string} address The address to send the newly generated qtum to.
-   * @param {number} maxTries How many iterations to try (default = 1000000).
-   * @return {array} Hashes of blocks generated.
-   */
-  generateToAddress(blocks, address, maxTries = 1000000) {
-    if (!isFinite(blocks)) {
-      throw Error('blocks must be a number.');
-    }
-    if (!isString(address)) {
-      throw Error('address must be a string.');
-    }
-
-    return this.provider.rawCall('generatetoaddress', [blocks, address, maxTries]);
+  getInfo() {
+    return this.provider.rawCall('getinfo');
   }
 
   /** ******** NETWORK ********* */
@@ -191,8 +137,8 @@ class Qweb3 {
 
   /** ******** RAW TRANSACTIONS ********* */
   /**
-   * Get the hex address of a Qtum address.
-   * @param {string} address Qtum address
+   * Get the hex address of a Runebase address.
+   * @param {string} address Runebase address
    * @return {Promise} Hex string of the converted address or Error
    */
   getHexAddress(address) {
@@ -200,9 +146,9 @@ class Qweb3 {
   }
 
   /**
-   * Converts a hex address to qtum address.
-   * @param {string} hexAddress Qtum address in hex format.
-   * @return {Promise} Qtum address or Error.
+   * Converts a hex address to runebase address.
+   * @param {string} hexAddress Runebase address in hex format.
+   * @return {Promise} Runebase address or Error.
    */
   fromHexAddress(hexAddress) {
     return this.provider.rawCall('fromhexaddress', [hexAddress]);
@@ -210,8 +156,8 @@ class Qweb3 {
 
   /** ******** UTIL ********* */
   /**
-   * Validates if a valid Qtum address.
-   * @param {string} address Qtum address to validate.
+   * Validates if a valid Runebase address.
+   * @param {string} address Runebase address to validate.
    * @return {Promise} Object with validation info or Error.
    */
   validateAddress(address) {
@@ -230,7 +176,7 @@ class Qweb3 {
 
   /**
    * Reveals the private key corresponding to the address.
-   * @param {string} address The qtum address for the private key.
+   * @param {string} address The runebase address for the private key.
    * @return {Promise} Private key or Error.
    */
   dumpPrivateKey(address) {
@@ -238,7 +184,7 @@ class Qweb3 {
   }
 
   /**
-   * Encrypts the wallet for the first time. This will shut down the qtum server.
+   * Encrypts the wallet for the first time. This will shut down the runebase server.
    * @param {string} passphrase The passphrase to encrypt the wallet with. Must be at least 1 character.
    * @return {Promise} Success or Error.
    */
@@ -247,8 +193,8 @@ class Qweb3 {
   }
 
   /**
-   * Gets the account name associated with the Qtum address.
-   * @param {string} address The qtum address for account lookup.
+   * Gets the account name associated with the Runebase address.
+   * @param {string} address The runebase address for account lookup.
    * @return {Promise} Account name or Error.
    */
   getAccount(address) {
@@ -256,27 +202,27 @@ class Qweb3 {
   }
 
   /**
-   * Gets the Qtum address based on the account name.
+   * Gets the Runebase address based on the account name.
    * @param {string} acctName The account name for the address ("" for default).
-   * @return {Promise} Qtum address or Error.
+   * @return {Promise} Runebase address or Error.
    */
   getAccountAddress(acctName = '') {
     return this.provider.rawCall('getaccountaddress', [acctName]);
   }
 
   /**
-   * Gets the Qtum address with the account name.
+   * Gets the Runebase address with the account name.
    * @param {string} acctName The account name ("" for default).
-   * @return {Promise} Qtum address array or Error.
+   * @return {Promise} Runebase address array or Error.
    */
   getAddressesByAccount(acctName = '') {
     return this.provider.rawCall('getaddressesbyaccount', [acctName]);
   }
 
   /**
-   * Gets a new Qtum address for receiving payments.
+   * Gets a new Runebase address for receiving payments.
    * @param {string} acctName The account name for the address to be linked to ("" for default).
-   * @return {Promise} Qtum address or Error.
+   * @return {Promise} Runebase address or Error.
    */
   getNewAddress(acctName = '') {
     return this.provider.rawCall('getnewaddress', [acctName]);
@@ -352,7 +298,7 @@ class Qweb3 {
   /**
    * Lists groups of addresses which have had their common ownership made public by common use as inputs
    *  or as the resulting change in past transactions.
-   * @return {Promise} Array of addresses with QTUM balances or Error.
+   * @return {Promise} Array of addresses with RUNEBASE balances or Error.
    */
   listAddressGroupings() {
     return this.provider.rawCall('listaddressgroupings');
@@ -376,15 +322,15 @@ class Qweb3 {
 
   /**
    * Lists unspent transaction outputs.
-   * @param {string} address Address to send QTUM to.
-   * @param {number} amount Amount of QTUM to send.
+   * @param {string} address Address to send RUNEBASE to.
+   * @param {number} amount Amount of RUNEBASE to send.
    * @param {string} comment Comment used to store what the transaction is for.
    * @param {string} commentTo Comment to store name/organization to which you're sending the transaction.
    * @param {boolean} subtractFeeFromAmount The fee will be deducted from the amount being sent.
    * @param {boolean} replaceable Allow this transaction to be replaced by a transaction with higher fees via BIP 125.
    * @param {number} confTarget Confirmation target (in blocks).
    * @param {string} estimateMode The fee estimate mode, must be one of: "UNSET", "ECONOMICAL", "CONSERVATIVE"
-   * @param {string} senderAddress The QTUM address that will be used to send money from.
+   * @param {string} senderAddress The RUNEBASE address that will be used to send money from.
    * @param {boolean} changeToSender Return the change to the sender.
    * @return {Promise} Transaction ID or Error
    */
@@ -416,7 +362,7 @@ class Qweb3 {
 
   /**
    * Set the transaction fee per kB. Overwrites the paytxfee parameter.
-   * @param {bumber} amount The transaction fee in QTUM/kB.
+   * @param {bumber} amount The transaction fee in RUNEBASE/kB.
    * @return {Promise} True/false for success or Error.
    */
   setTxFee(amount) {
@@ -453,4 +399,4 @@ class Qweb3 {
   }
 }
 
-module.exports = Qweb3;
+module.exports = Rweb3;

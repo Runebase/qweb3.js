@@ -146,12 +146,12 @@ class Utils {
   }
 
   /**
-   * Returns true if given string is valid qtum address
-   * @method isQtumAddress
+   * Returns true if given string is valid runebase address
+   * @method isRunebaseAddress
    * @param {String}
    * @return {Boolean}
    */
-  static isQtumAddress(address) {
+  static isRunebaseAddress(address) {
     if (_.isUndefined(address)) {
       return false;
     }
@@ -160,7 +160,7 @@ class Utils {
       return false;
     }
 
-    if (!address.startsWith('q') && !address.startsWith('Q')) {
+    if (!address.startsWith('5') && !address.startsWith('R')) {
       return false;
     }
 
