@@ -7,25 +7,25 @@ const Decoder = require('../decoder');
 const { assert, expect } = chai;
 
 describe('Decoder', () => {
-  describe('toQtumAddress()', () => {
-    it('returns the converted qtum address', () => {
+  describe('toRunebaseAddress()', () => {
+    it('returns the converted runebase address', () => {
       assert.equal(
-        Decoder.toQtumAddress('17e7888aa7412a735f336d2f6d784caefabb6fa3', false),
+        Decoder.toRunebaseAddress('17e7888aa7412a735f336d2f6d784caefabb6fa3', false),
         'qKjn4fStBaAtwGiwueJf9qFxgpbAvf1xAy',
       );
       assert.equal(
-        Decoder.toQtumAddress('2a2ad24849bc061f0f7abee243ebdb584b0d11f1', true),
+        Decoder.toRunebaseAddress('2a2ad24849bc061f0f7abee243ebdb584b0d11f1', true),
         'QQSwne4oB1jmRXceHrs9tPGQmn7qjvSqyR',
       );
     });
 
     it('throws if hexAddress is undefined or empty', () => {
-      expect(() => Decoder.toQtumAddress()).to.throw();
-      expect(() => Decoder.toQtumAddress('')).to.throw();
+      expect(() => Decoder.toRunebaseAddress()).to.throw();
+      expect(() => Decoder.toRunebaseAddress('')).to.throw();
     });
 
     it('throws if hexAddress is not hex', () => {
-      expect(() => Decoder.toQtumAddress('qKjn4fStBaAtwGiwueJf9qFxgpbAvf1xAy')).to.throw();
+      expect(() => Decoder.toRunebaseAddress('qKjn4fStBaAtwGiwueJf9qFxgpbAvf1xAy')).to.throw();
     });
   });
 
