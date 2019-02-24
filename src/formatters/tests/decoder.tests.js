@@ -11,11 +11,11 @@ describe('Decoder', () => {
     it('returns the converted runebase address', () => {
       assert.equal(
         Decoder.toRunebaseAddress('17e7888aa7412a735f336d2f6d784caefabb6fa3', false),
-        'qKjn4fStBaAtwGiwueJf9qFxgpbAvf1xAy',
+        '5Tu2jpxUnufPo2XWEuzvJAbD5qWMXGLKhf',
       );
       assert.equal(
         Decoder.toRunebaseAddress('2a2ad24849bc061f0f7abee243ebdb584b0d11f1', true),
-        'QQSwne4oB1jmRXceHrs9tPGQmn7qjvSqyR',
+        'RD89krfNbNfX4PtpLhXnrdoz2ndjEogG5Q',
       );
     });
 

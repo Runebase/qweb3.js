@@ -7,8 +7,8 @@ const bs58 = require('bs58');
 const Encoder = require('./encoder');
 const Utils = require('../utils');
 
-const MainnetNetworkByte = '3A';
-const TestnetNetworkByte = '78';
+const MainnetNetworkByte = '3C';
+const TestnetNetworkByte = '0B';
 
 class Decoder {
   static toRunebaseAddress(hexAddress, isMainnet = false) {
