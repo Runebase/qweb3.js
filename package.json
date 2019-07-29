@@ -1,7 +1,7 @@
 {
   "name": "rweb3",
   "namespace": "bodhi",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Runebase JavaScript API comunicating to runebase node over RPC",
   "main": "./src/index.js",
   "repository": {

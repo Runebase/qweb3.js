@@ -314,7 +314,7 @@ describe('Rweb3', () => {
   /** ******** WALLET ********* */
   describe('dumpPrivateKey()', () => {
     it('returns the private key', async () => {
-      const address = await rweb3.getAccountAddress('');
+      const address = await rweb3.getNewAddress('');
       if (await isWalletEncrypted(rweb3)) {
         await rweb3.walletPassphrase(getWalletPassphrase(), 3600);
         assert.isTrue((await rweb3.getWalletInfo()).unlocked_until > 0);
@@ -333,23 +333,16 @@ describe('Rweb3', () => {
     });
   });
 
-  describe('getAccountAddress()', () => {
-    it('returns the account address', async () => {
-      const res = await rweb3.getAccountAddress('');
+  describe('getAddressesByLabel()', () => {
+    it('returns the label address', async () => {
+      // await rweb3.getNewAddress('TestLabel')
+      const res = await rweb3.getAddressesByLabel('TestLabel');
       assert.isDefined(res);
-      assert.isString(res);
-      assert.isTrue(res.startsWith('5') || res.startsWith('R'));
+      assert.isObject(res);
+      assert.isTrue(Object.keys(res)[0].startsWith('5') || Object.keys(res)[0].startsWith('R'));
     });
   });
 
-  describe('getAddressesByAccount()', () => {
-    it('returns the account address array', async () => {
-      const res = await rweb3.getAddressesByAccount('');
-      assert.isDefined(res);
-      assert.isArray(res);
-      assert.isTrue(_.every(res, item => item.startsWith('5') || item.startsWith('R')));
-    });
-  });
 
   describe('getTransaction()', () => {
     it('returns the transaction info', () => {

@@ -260,17 +260,8 @@ class Rweb3 {
    * @param {string} acctName The account name for the address ("" for default).
    * @return {Promise} Runebase address or Error.
    */
-  getAccountAddress(acctName = '') {
-    return this.provider.rawCall('getaccountaddress', [acctName]);
-  }
-
-  /**
-   * Gets the Runebase address with the account name.
-   * @param {string} acctName The account name ("" for default).
-   * @return {Promise} Runebase address array or Error.
-   */
-  getAddressesByAccount(acctName = '') {
-    return this.provider.rawCall('getaddressesbyaccount', [acctName]);
+  getAddressesByLabel(label = '') {
+    return this.provider.rawCall('getaddressesbylabel', [label]);
   }
 
   /**
