@@ -88,6 +88,15 @@ class Rweb3 {
     return this.provider.rawCall('getblockhash', [blockNum]);
   }
 
+ /**
+   * Returns the transaction receipt given the txid.
+   * @param {string} txid The transaction id to look up.
+   * @return {Promise} Transaction receipt or Error.
+   */
+  listTransactions(mostRecent) {
+    return this.provider.rawCall('listtransactions', ["*", mostRecent]);
+  }
+
   /**
    * Returns the transaction receipt given the txid.
    * @param {string} txid The transaction id to look up.
